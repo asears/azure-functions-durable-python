@@ -4,7 +4,8 @@ from .Action import Action
 from .ActionType import ActionType
 from ..RetryOptions import RetryOptions
 from ..utils.json_utils import add_attrib, add_json_attrib
-
+from json import dumps
+from azure.functions._durable_functions import _serialize_custom_object
 
 class CallActivityWithRetryAction(Action):
     """Defines the structure of the Call Activity With Retry object.
@@ -16,7 +17,7 @@ class CallActivityWithRetryAction(Action):
                  retry_options: RetryOptions, input_=None):
         self.function_name: str = function_name
         self.retry_options: RetryOptions = retry_options
-        self.input_ = input_
+        self.input_ = dumps(input_, default=_serialize_custom_object)
 
         if not self.function_name:
             raise ValueError("function_name cannot be empty")
